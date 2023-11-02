@@ -46,6 +46,16 @@ def extract_code_blocks(md_content, language):
         count += 1
     return extracted_code
 
+def extract_any_code_blocks(md_content):
+    extracted_code = {}
+    html = markdown.markdown(md_content)
+    count = 1
+    for match in re.finditer('<pre><code class="(.*)">(.*?)</code></pre>', html, re.S):
+        script = match.group(2).strip().replace('<br>', '\n').replace('&lt;', '<').replace('&gt;', '>')
+        extracted_code[str(count)] = script
+        count += 1
+    return extracted_code
+    
 def extract_package_names(code):
     packages = []
     for line in code.split('\n'):
@@ -64,7 +74,7 @@ def display_menu(code_blocks):
 
 if __name__ == "__main__":
     md_content = read_md_file("README.md")
-    code_blocks = extract_code_blocks(md_content, "python")
+    code_blocks = extract_any_code_blocks(md_content)
     install("python3-pip")
 
     while True:
