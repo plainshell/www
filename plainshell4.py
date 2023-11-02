@@ -99,11 +99,12 @@ if __name__ == "__main__":
         display_menu(code_blocks)
 
         choice = input("Choose option: ")
-        choice = choice.split('.')
-        if len(choice) < 2:
-            print("Invalid input. Please enter the script number and action (e.g. '1.1').")
-            continue
-        script_id, action = choice
+        #choice = choice.split('.')
+        #if len(choice) < 2:
+        #    print("Invalid input. Please enter the script number and action (e.g. '1.1').")
+        #    continue
+        script_id = choice
+        action = 1
 
         if script_id not in code_blocks:
             print("Invalid option. Please choose a valid script or script action.")
