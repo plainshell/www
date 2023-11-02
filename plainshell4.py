@@ -3,9 +3,18 @@ import re
 import os
 import yaml
 from subprocess import call
+import platform
 
 def install(package):
-    call(["sudo", "apt-get", "install", "-y", package])
+    if platform.system() == 'Linux':
+        call(["sudo", "apt-get", "install", "-y", package])
+    elif platform.system() == 'Darwin':
+        call(["brew", "install", package])
+    elif platform.system() == 'Windows':
+        call(["pip", "install", package])
+    else:
+        print('Unsupported OS')
+        return
 
 def read_md_file(file_name):
     with open(file_name, "r") as readme_file:
