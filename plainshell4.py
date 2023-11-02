@@ -41,7 +41,7 @@ if __name__ == "__main__":
     code_blocks = extract_code_blocks(md_content, "python")
     install("python3-pip")
 
-        while True:
+    while True:
         # wywołaj funkcję wyświetlania menu
         display_menu(code_blocks)
 
