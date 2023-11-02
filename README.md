@@ -2,6 +2,12 @@
 
 Przybyszu z krainu shella, dziś już możesz uruchomić dowolny skrypt z pliku readme selektywnie
 
+## TODO
+
+w planach jest:
++ skanowanie struktury plików i pokazywanie w menu wszystkich skryptów w plikach w danej ścieżce
++ utworzenie jednego menu, gdzie możesz sobie wybrać co chcesz uruchomić, co jest przydatne w kontekście wielu projektów w różnych folderach
+
 
 ## Nagłówki
 
