@@ -4,6 +4,7 @@ import os
 import yaml
 from subprocess import call
 import platform
+import textwrap
 
 
 def install(package):
@@ -52,10 +53,12 @@ def extract_package_names(code):
             packages.append(line.split(' ')[1])
     return packages
 
+
 def display_menu(code_blocks):
     print("MENU: ")
     for number in code_blocks:
-        print(f"{number}. Show script")
+        script = textwrap.shorten(code_blocks[number], width=50, placeholder="...")
+        print(f"{number}. Show script ({script})")
         print(f"{number}.1. Run script") 
 
 
@@ -67,17 +70,16 @@ if __name__ == "__main__":
     while True:
         # wywołaj funkcję wyświetlania menu
         display_menu(code_blocks)
-        
+
         choice = input("Choose option: ")
         choice = choice.split('.')
-        #script_id, action = choice.split('.')
         if len(choice) < 2:
             print("Invalid input. Please enter the script number and action (e.g. '1.1').")
             continue
         script_id, action = choice
 
         if script_id not in code_blocks:
-            print("Invalid option. Please choose a valid script number.")
+            print("Invalid option. Please choose a valid script or script action.")
             continue
 
         if action == '1':
@@ -88,4 +90,4 @@ if __name__ == "__main__":
             print(code_blocks[script_id])
             packages = extract_package_names(code_blocks[script_id])
             for package in packages:
-                call(["pip3", "install", package], shell=True)
+                install(package)
