@@ -83,8 +83,8 @@ def display_menu(code_blocks):
     print("MENU: ")
     for number in code_blocks:
         script = textwrap.shorten(code_blocks[number], width=50, placeholder="...")
-        print(f"{number}. Show script ({script})")
-        print(f"{number}.1. Run script") 
+        print(f"{number}. run ({script})")
+        #print(f"{number}.1. Run script") 
 
 
 if __name__ == "__main__":
@@ -108,15 +108,17 @@ if __name__ == "__main__":
         if script_id not in code_blocks:
             print("Invalid option. Please choose a valid script or script action.")
             continue
+            
         if action == '1':
-            # Uruchom skrypt
-            if language == 'python':
-                exec(code_blocks[script_id])
-            elif language == 'bash':
-                subprocess.run(['bash', '-c', code_blocks[script_id]])                        
-        else:
             # Wyświetl skrypt
             print(code_blocks[script_id])
             packages = extract_package_names(code_blocks[script_id])
             for package in packages:
-                install(package)
+                install(package)                                
+        else:
+            # Uruchom skrypt
+            if language == 'python':
+                exec(code_blocks[script_id])
+            elif language == 'bash':
+                subprocess.run(['bash', '-c', code_blocks[script_id]])    
+            
