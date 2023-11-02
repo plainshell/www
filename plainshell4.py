@@ -39,6 +39,7 @@ def read_md_file(file_name):
 def extract_code_blocks(md_content, language):
     extracted_code = {}
     html = markdown.markdown(md_content)
+    print(html)
     count = 1
     for match in re.finditer('<pre><code class="{}">(.*?)</code></pre>'.format(language), html, re.S):
         script = match.group(1).strip().replace('<br>', '\n').replace('&lt;', '<').replace('&gt;', '>')
@@ -49,6 +50,7 @@ def extract_code_blocks(md_content, language):
 def extract_any_code_blocks(md_content):
     extracted_code = {}
     html = markdown.markdown(md_content)
+    print(html)
     count = 1
     for match in re.finditer('<pre><code class="(.*)">(.*?)</code></pre>', html, re.S):
         script = match.group(2).strip().replace('<br>', '\n').replace('&lt;', '<').replace('&gt;', '>')
