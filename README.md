@@ -25,5 +25,11 @@ Skrypt musi być uruchamiany za pomocą praw uprawnionych do instalowania pakiet
 ./plainshell.sh
 ```
 
+## python
+
+```bash
+python3 --version
+```
+
 ---
 + [edit](https://github.com/plainshell/www/edit/main/README.md)
