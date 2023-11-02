@@ -34,4 +34,4 @@ fi
 #python3 --version
 #pip3 --version
 
-python3 script.py
+python3 plainshell.py
