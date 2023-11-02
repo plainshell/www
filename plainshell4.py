@@ -29,25 +29,35 @@ def extract_package_names(code):
             packages.append(line.split(' ')[1])
     return packages
 
+def display_menu(code_blocks):
+    print("MENU: ")
+    for number in code_blocks:
+        print(f"{number}. Show script")
+        print(f"{number}.1. Run script") 
+
+
 if __name__ == "__main__":
     md_content = read_md_file("README.md")
     code_blocks = extract_code_blocks(md_content, "python")
     install("python3-pip")
 
-    while True:
-        print("MENU: ")
-        for number, script in code_blocks.items():
-            print(number, "Show script")
-            print(number + ".1", "Run script")
+        while True:
+        # wywołaj funkcję wyświetlania menu
+        display_menu(code_blocks)
 
         choice = input("Choose option: ")
-        script_id = choice.split('.')[0]
-        script = code_blocks[script_id]
+        script_id, action = choice.split('.')
 
-        if choice.endswith('.1'):
-            exec(script)
+        if script_id not in code_blocks:
+            print("Invalid option. Please choose a valid script number.")
+            continue
+
+        if action == '1':
+            # Uruchom skrypt
+            exec(code_blocks[script_id])
         else:
-            packages = extract_package_names(script)
+            # Wyświetl skrypt
+            print(code_blocks[script_id])
+            packages = extract_package_names(code_blocks[script_id])
             for package in packages:
-                call(["sudo", "pip3", "install", package])
-            print(script)
+                call(["pip3", "install", package], shell=True)
