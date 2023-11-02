@@ -20,6 +20,19 @@ def find_code_blocks(md_file_text):
 
     return code_blocks
 
+
+def docker():
+    # Check if Docker is installed
+    if os.system("docker -v") != 0:
+        print("Docker is not installed. Installing Docker...")
+        os.system("curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh")
+    
+    # Pull Python image
+    os.system("docker pull python")
+    
+    # Run a Python script
+    os.system("docker run python python -c 'print(\"Hello, World!\")'")
+
 def main():
     filename = "README.md"
     md_file_text = read_file(filename)
@@ -44,4 +57,5 @@ def main():
         os.system(code_blocks[int(block_num_to_execute) - 1])
 
 if __name__ == "__main__":
+    docker()
     main()
