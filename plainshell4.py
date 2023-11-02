@@ -57,6 +57,18 @@ def extract_any_code_blocks(md_content):
         extracted_code[str(count)] = script
         count += 1
     return extracted_code
+
+def extract_md_code_blocks(md_content):
+    extracted_code = {}
+    
+    code_blocks = re.findall(r'```(.*?)```', md_content, re.DOTALL)
+
+    for i, block in enumerate(code_blocks):
+        # Usuń ewentualne oznaczenia języka skryptu (np. python, bash)
+        clean_block = re.sub(r'^\w+\n', '', block).strip()
+        extracted_code[str(i+1)] = clean_block
+
+    return extracted_code
     
 def extract_package_names(code):
     packages = []
@@ -76,7 +88,8 @@ def display_menu(code_blocks):
 
 if __name__ == "__main__":
     md_content = read_md_file("README.md")
-    code_blocks = extract_any_code_blocks(md_content)
+    #code_blocks = extract_any_code_blocks(md_content)
+    code_blocks = extract_md_code_blocks(md_content)
     install("python3-pip")
 
     while True:
