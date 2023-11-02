@@ -5,6 +5,7 @@ import yaml
 from subprocess import call
 import platform
 import textwrap
+import subprocess
 
 
 def install(package):
@@ -90,6 +91,7 @@ if __name__ == "__main__":
     md_content = read_md_file("README.md")
     #code_blocks = extract_any_code_blocks(md_content)
     code_blocks = extract_md_code_blocks(md_content)
+    language='bash'
     install("python3-pip")
 
     while True:
@@ -106,10 +108,12 @@ if __name__ == "__main__":
         if script_id not in code_blocks:
             print("Invalid option. Please choose a valid script or script action.")
             continue
-
         if action == '1':
             # Uruchom skrypt
-            exec(code_blocks[script_id])
+            if language == 'python':
+                exec(code_blocks[script_id])
+            elif language == 'bash':
+                subprocess.run(['bash', '-c', code_blocks[script_id]])                        
         else:
             # Wyświetl skrypt
             print(code_blocks[script_id])
