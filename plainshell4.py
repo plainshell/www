@@ -5,9 +5,23 @@ import yaml
 from subprocess import call
 import platform
 
+
 def install(package):
     if platform.system() == 'Linux':
-        call(["sudo", "apt-get", "install", "-y", package])
+        try:
+            distro = platform.linux_distribution()[0]
+        except:
+            print("Unable to determine Linux distribution")
+            return
+        if distro == "Ubuntu":
+            call(["sudo", "apt-get", "install", "-y", package])
+        elif distro == "Fedora":
+            call(["sudo", "dnf", "install", "-y", package])
+        elif distro == "arch":
+            call(["sudo", "pacman", "-S", package])
+        else:
+            print(f'Unsupported Linux distribution: {distro}')
+            return
     elif platform.system() == 'Darwin':
         call(["brew", "install", package])
     elif platform.system() == 'Windows':
@@ -53,9 +67,14 @@ if __name__ == "__main__":
     while True:
         # wywołaj funkcję wyświetlania menu
         display_menu(code_blocks)
-
+        
         choice = input("Choose option: ")
-        script_id, action = choice.split('.')
+        choice = choice.split('.')
+        #script_id, action = choice.split('.')
+        if len(choice) < 2:
+            print("Invalid input. Please enter the script number and action (e.g. '1.1').")
+            continue
+        script_id, action = choice
 
         if script_id not in code_blocks:
             print("Invalid option. Please choose a valid script number.")
