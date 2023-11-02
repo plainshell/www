@@ -1,5 +1,8 @@
 # www.plainshell.com
 
+Przybyszu z krainu shella, dziś już możesz uruchomić dowolny skrypt z pliku readme selektywnie
+
+
 ## Nagłówki
 
 skrypt python, który jest obsługiwany z linii polceceń shellu, czytający przykładowy plik README.md w formacie markdown i wyświetlający menu pomocy z pliku markdown listując nagłówki header. Po wybraniu z menu polecenia skrypt powinien uruchomić  zawartość, która jest kodem znajdująca się w separatorach ``` w zależności od języka programowania powinna doinstalować pakiety potrzebne do uruchomienia bazując na systemie linux.
