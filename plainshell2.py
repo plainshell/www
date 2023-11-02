@@ -1,74 +1,85 @@
 #!/usr/bin/env python3
 import os
-import markdown
-import re
 import sys
-import subprocess
+import re
+from markdown import Markdown
+from io import StringIO
 
-# Parse README.md file and get headers and code blocks
-def parse_file(filename):
+
+# Function to run bash commands
+def run_bash_cmd(cmd):
+    os.system(cmd)
+
+
+# Function to simulate switch-case in Python
+def run_code(prog):
+    choices = {'python': run_bash_cmd}
+
+    func = choices.get(prog.lower(), lambda: 'Invalid language!')
+    return func
+
+
+# Function to read README.md file
+def read_file(filename):
     with open(filename, 'r') as f:
         text = f.read()
-    md = markdown.Markdown(extensions=['fenced_code'])
-    html = md.convert(text)
-    code_blocks = md.parser.blockprocessors['fenced_code'].code_blocks
-    return code_blocks
+    return text
 
-def check_language(lang):
-    lang_check = {'python': 'python3 --version', 
-              'bash': 'bash --version',
-              'ruby': 'ruby --version',
-              'perl': 'perl --version'}  
 
-    if lang in lang_check:
-        try:
-            subprocess.check_output(lang_check[lang],shell=True)
-        except Exception:
-            print(f"{lang} is not installed. Do you want to install it now?")
-            answer = input("Y/N: ")
-            if answer.lower() == 'y':
-                os.system(f"sudo apt-get install {lang}")
-            else:
-                print("Exitting...")
-                exit(1)
-        return True
-    else:
-        print(f"Language {lang} is not supported in this script.")
-        return False
+# Finds code blocks, extracts, saves to list and returns
+def find_code_blocks(md_file_text):
+    md_to_html_converter = Markdown()
 
-# Run code block in appropriate language
-def run_code_block(code_block):
-    lang, code = code_block.split("\n", 1)
-    if check_language(lang):
-        os.system(code)
+    html = md_to_html_converter.convert(md_file_text)
 
-# Main function
+    code_block_with_breaks = re.findall('<pre><code class="(.*)">([\s\S]*?)<\/code><\/pre>', html)
+    code_block_language_and_code = [(item[0].split()[0], item[1]) for item in code_block_with_breaks]
+
+    return code_block_language_and_code
+
+
+# Starts respective code block
+def runner(code_language, code_text):
+    lang_run_cmd = {'python': 'python'}
+
+    check_installed_cmd = {'python': 'python --version'}
+
+    if code_language not in lang_run_cmd or code_language not in check_installed_cmd:
+        print(f'Language "{code_language}" is not supported yet, or is invalid.\n')
+        return
+
+    is_installed = os.system(check_installed_cmd[code_language])
+
+    if is_installed != 0:
+        os.system(f"apt update && apt install {code_language}")
+        # TODO: add more sophisticated method of installing programming languages/tools
+
+    os.system(lang_run_cmd[code_language])
+
+
 def main():
     filename = "README.md"
-    code_blocks = parse_file(filename)
+    md_file_text = read_file(filename)
+    code_blocks = find_code_blocks(md_file_text)
 
     while True:
-        if len(sys.argv) == 1:
-            for i, code in enumerate(code_blocks):
-                print(f"{i+1} - {code[:100]}...")
-            option = input("\nChoose an option (or 'q' to quit): ")
-            if option.lower() == 'q':
-                break
-            else:
-                try: 
-                    index = int(option) - 1
-                    if index < 0 or index >= len(code_blocks):
-                        print("\nInvalid option\n")
-                    else:
-                        run_code_block(code_blocks[index])
-                except ValueError:
-                    print("\nInvalid option\n")
-        else:
-            index = int(sys.argv[1])
-            if index < 0 or index >= len(code_blocks):
-                print("\nInvalid option\n")
-            else:
-                run_code_block(code_blocks[index])
+        for index, code_block in enumerate(code_blocks):
+            print(f'{index + 1}. {code_block[0]}: \t{code_block[1][:75]}...')
+
+        block_num_to_execute = input(f'\nEnter a block number to execute ("q" to quit program): ')
+
+        if block_num_to_execute.lower() == 'q':
+            break
+
+        is_integer = re.match("^[1-9][0-9]*$", block_num_to_execute)
+        is_in_range = is_integer and (1 <= int(block_num_to_execute) <= len(code_blocks))
+
+        if not is_in_range:
+            print(f'Invalid option; expected integer between 1 and {len(code_blocks)}\n')
+            continue
+
+        runner(code_blocks[int(block_num_to_execute) - 1][0], code_blocks[int(block_num_to_execute) - 1][1])
+
 
 if __name__ == "__main__":
     main()
